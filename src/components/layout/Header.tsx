@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import type { MotionProps } from 'framer-motion';
 import { MoonStar, SunMedium } from 'lucide-react';
 
-import { MissingAssetsToggle } from '@components/MissingAssetsPanel';
 import { useTheme } from '@components/providers/ThemeProvider';
 import { Button } from '@components/ui/button';
 import { SECTION_NAV_ITEMS, type SectionNavItem } from '@config/sections';
@@ -55,9 +54,6 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           className="rounded-full bg-foreground/10 px-4 py-2 text-left text-sm font-semibold text-foreground/90 backdrop-blur-lg"
         >
           <div className="leading-tight">
-            <span className="block text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              {resolvedTheme === 'dark' ? 'Night Mode' : 'Day Mode'}
-            </span>
             <span className="block text-sm font-semibold text-foreground">{displayName}</span>
             {resumeTitle ? <span className="block text-xs text-muted-foreground">{resumeTitle}</span> : null}
           </div>
@@ -93,7 +89,6 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           >
             {resolvedTheme === 'dark' ? <SunMedium className="h-4 w-4" /> : <MoonStar className="h-4 w-4" />}
           </Button>
-          <MissingAssetsToggle />
         </div>
       </nav>
     </header>
