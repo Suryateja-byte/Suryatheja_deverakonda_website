@@ -52,14 +52,18 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           {...hoverMotion}
           type="button"
           onClick={() => handleNavigate('hero')}
-          className="rounded-full bg-foreground/10 px-4 py-2 text-left text-sm font-semibold text-foreground/90 backdrop-blur-lg"
+          className="flex-shrink-0 rounded-full bg-foreground/10 px-4 py-2 text-left text-sm font-semibold text-foreground/90 backdrop-blur-lg"
         >
           <div className="leading-tight">
             <span className="block text-xs uppercase tracking-[0.3em] text-muted-foreground">
               {resolvedTheme === 'dark' ? 'Night Mode' : 'Day Mode'}
             </span>
-            <span className="block text-sm font-semibold text-foreground">{displayName}</span>
-            {resumeTitle ? <span className="block text-xs text-muted-foreground">{resumeTitle}</span> : null}
+            <span className="flex items-baseline gap-2 text-sm font-semibold text-foreground">
+              <span className="whitespace-nowrap">{displayName}</span>
+              {resumeTitle ? (
+                <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">{resumeTitle}</span>
+              ) : null}
+            </span>
           </div>
         </motion.button>
 
