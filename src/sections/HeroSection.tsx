@@ -8,7 +8,7 @@ import { Button } from '@components/ui/button';
 import { buildHeroCopy, getPrimaryEmail } from '@lib/formatters';
 import { prefersReducedMotion } from '@lib/utils';
 
-const RESUME_CANDIDATES = ['/assets/docs/resume.pdf', '/assets/docs/resume.docx'];
+const RESUME_CANDIDATES = ['/assets/docs/resume.docx', '/assets/docs/resume.pdf'];
 
 export function HeroSection() {
   const { data } = useResumeContext();
