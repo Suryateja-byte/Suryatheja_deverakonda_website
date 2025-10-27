@@ -10,6 +10,7 @@ import { z } from "zod";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const OUTPUT_PATH = path.resolve(ROOT, "data", "resume.normalized.json");
+const PUBLIC_OUTPUT_PATH = path.resolve(ROOT, "public", "data", "resume.normalized.json");
 
 const SECTION_KEYWORDS = {
   summary: ["summary", "profile", "professional summary", "objective"],
@@ -666,7 +667,10 @@ const main = async () => {
       normalized = normalizeResume(parsed);
     }
     await ensureDir(path.dirname(OUTPUT_PATH));
-    await writeFile(OUTPUT_PATH, JSON.stringify(normalized, null, 2), "utf8");
+    await ensureDir(path.dirname(PUBLIC_OUTPUT_PATH));
+    const payload = JSON.stringify(normalized, null, 2);
+    await writeFile(OUTPUT_PATH, payload, "utf8");
+    await writeFile(PUBLIC_OUTPUT_PATH, payload, "utf8");
     const relativeInput = path.relative(ROOT, source.path);
     const relativeOutput = path.relative(ROOT, OUTPUT_PATH);
     console.log(`Resume normalized successfully from ${relativeInput} -> ${relativeOutput}`);
