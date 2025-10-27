@@ -1,0 +1,180 @@
+{
+  "name": "Surya Theja Devera Konda",
+  "title": "",
+  "summary": "Machine Learning Engineer (Python) with 3+years of experience delivering secure, high\u00e2\u20ac\u2018quality ML systems from concept to production. Hands\u00e2\u20ac\u2018on across the full lifecycle\u00e2\u20ac\u201ddata ingestion, feature engineering, model training, evaluation, deployment, and monitoring. Strong with PyTorch, TensorFlow, scikit\u00e2\u20ac\u2018learn, XGBoost/LightGBM, and MLOps on AWS/Azure (Docker, Kubernetes, CI/CD). Active Kaggle competitor with multiple top\u00e2\u20ac\u2018percentile finishes demonstrating rigorous cross\u00e2\u20ac\u2018validation, leakage checks, calibration, and ensembling. Open to relocation within the U.S.",
+  "location": "",
+  "email": "",
+  "phone": "",
+  "website": "",
+  "socials": [],
+  "skills": [
+    "Python (OOP",
+    "decorators",
+    "generators",
+    "context managers )",
+    "pandas",
+    "NumPy",
+    "scikit\u00e2\u20ac\u2018learn",
+    "PyTorch",
+    "TensorFlow",
+    "XGBoost",
+    "LightGBM",
+    "AWS",
+    "Azure",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "model monitoring",
+    "A/B testing",
+    "SQL",
+    "ETL",
+    "feature stores",
+    "vector search",
+    "FAISS",
+    "Pinecone",
+    "Milvus",
+    "Transformers",
+    "Hugging Face",
+    "LangChain",
+    "prompt engineering",
+    "retrieval",
+    "evaluation",
+    "Time\u00e2\u20ac\u2018series forecasting",
+    "gradient boosting",
+    "CV strategies (GroupKFold",
+    "expanding windows )",
+    "calibration",
+    "Platt",
+    "Isotonic",
+    "ensembling",
+    "stacking",
+    "blending",
+    "drift detection",
+    "Secure coding",
+    "code reviews",
+    "Agile/Scrum",
+    "documentation",
+    "reproducibility"
+  ],
+  "projects": [
+    {
+      "name": "Fraud Detection Model Pipeline",
+      "summary": "End\u00e2\u20ac\u2018to\u00e2\u20ac\u2018end pipeline: ingestion \u00e2\u2020\u2019 feature engineering \u00e2\u2020\u2019 training \u00e2\u2020\u2019 deployment on AKS; added monitoring for performance and drift with retraining triggers .",
+      "tags": [
+        "Python",
+        "TensorFlow",
+        "Azure"
+      ],
+      "highlights": [
+        "End\u00e2\u20ac\u2018to\u00e2\u20ac\u2018end pipeline: ingestion \u00e2\u2020\u2019 feature engineering \u00e2\u2020\u2019 training \u00e2\u2020\u2019 deployment on aks",
+        "Added monitoring for performance and drift with retraining triggers"
+      ],
+      "links": {
+        "demo": "",
+        "code": ""
+      }
+    },
+    {
+      "name": "Travel Demand Forecasting",
+      "summary": "Forecasting models integrated with booking systems; iterative feature engineering reduced forecast error by 12% and enabled price\u00e2\u20ac\u2018sensitivity tests .",
+      "tags": [
+        "PyTorch",
+        "AWS",
+        "scikit\u00e2\u20ac\u2018learn"
+      ],
+      "highlights": [
+        "Forecasting models integrated with booking systems",
+        "Iterative feature engineering reduced forecast error by 12% and enabled price\u00e2\u20ac\u2018sensitivity tests"
+      ],
+      "links": {
+        "demo": "",
+        "code": ""
+      }
+    },
+    {
+      "name": "Healthcare Predictive Analytics",
+      "summary": "Patient risk scoring with secure preprocessing; targeted feature selection improved recall by 10% without sacrificing precision .",
+      "tags": [
+        "TensorFlow",
+        "GCP",
+        "SQL"
+      ],
+      "highlights": [
+        "Patient risk scoring with secure preprocessing",
+        "Targeted feature selection improved recall by 10% without sacrificing precision"
+      ],
+      "links": {
+        "demo": "",
+        "code": ""
+      }
+    },
+    {
+      "name": "KAGGLE COMPETITIONS & RANKINGS",
+      "summary": "Digit Recognizer \u00e2\u20ac\u201d Rank 60/936 (top 6 .4% ); built CNN and gradient\u00e2\u20ac\u2018boosting baselines with calibrated, blended predictions .",
+      "tags": [
+        "as of October 24",
+        "2025"
+      ],
+      "highlights": [
+        "Spaceship Titanic \u00e2\u20ac\u201d Rank 169/1634 (top 10 .3% ); leakage\u00e2\u20ac\u2018safe GroupKFold, stacked tree models, probability calibration, and threshold search .",
+        "Titanic \u00e2\u20ac\u201d ULima Edition \u00e2\u20ac\u201d Rank 12/91 (top 13 .2% ); feature crosses and robust CV for stable generalization .",
+        "Predicting Road Accident Risk (Playground S5E10 ) \u00e2\u20ac\u201d Rank 742/3071 (top 24 .2% ); time\u00e2\u20ac\u2018aware validation, gradient boosting with feature\u00e2\u20ac\u2018importance audits ."
+      ],
+      "links": {
+        "demo": "",
+        "code": ""
+      }
+    }
+  ],
+  "experience": [
+    {
+      "company": "Capital One",
+      "role": "Python & Machine Learning Engineer",
+      "start": "2024-06",
+      "end": "Present",
+      "location": "Irving, TX (Hybrid)",
+      "summary": "Leading fraud detection and NLP platforms across product and risk.",
+      "bullets": [
+        "Designed and deployed fraud-detection and NLP classification models (TensorFlow, scikit-learn) that lifted precision/recall balance and overall accuracy by 15%.",
+        "Automated feature engineering and data-quality validation, cutting preprocessing time by 30% and reducing incidents by 40%.",
+        "Integrated real-time models into microservices handling 2M+ requests/day with 99.5% uptime, including drift monitoring and SLA alerting.",
+        "Partnered with product and risk stakeholders to ship measurable ML objectives 25% faster from concept to production."
+      ]
+    },
+    {
+      "company": "Sabre Corporation",
+      "role": "Machine Learning Engineer",
+      "start": "2023-06",
+      "end": "2024-04",
+      "location": "Dallas, TX",
+      "summary": "Delivered demand forecasting and revenue optimisation for global travel products.",
+      "bullets": [
+        "Built PyTorch + scikit-learn forecasting pipelines that improved pricing accuracy by 18% across flagship routes.",
+        "Engineered high-volume feature stores that boosted model performance 20% and accelerated A/B iteration cycles.",
+        "Containerised workloads on AWS with Docker/Kubernetes and blue/green rollouts supporting 100M+ annual transactions.",
+        "Optimised ML outputs to align with revenue targets, driving measurable margin lift in pilot markets."
+      ]
+    },
+    {
+      "company": "Infosys",
+      "role": "Machine Learning Engineer",
+      "start": "2021-07",
+      "end": "2022-07",
+      "location": "Hyderabad, India",
+      "summary": "Shipped healthcare analytics platforms with secure, compliant data pipelines.",
+      "bullets": [
+        "Delivered predictive analytics that increased operational efficiency by 25% and improved clinical-risk recall by 10%.",
+        "Created HIPAA-aware ETL pipelines across large patient datasets with schema enforcement and automated validation.",
+        "Deployed cloud ML services with CI/CD and authored runbooks adopted by three delivery pods."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Southern Arkansas University \u00e2\u20ac\u201d M .S ., Computer Science | Aug 2022 \u00e2\u20ac\u201c May 2024",
+      "degree": "Osmania University \u00e2\u20ac\u201d B .S ., Computer Science | Aug 2016 \u00e2\u20ac\u201c May 2021",
+      "year": ""
+    }
+  ],
+  "testimonials": []
+}
