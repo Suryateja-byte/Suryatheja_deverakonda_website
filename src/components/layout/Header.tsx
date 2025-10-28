@@ -60,7 +60,7 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
     <header
       data-site-header
       className={cn(
-        'sticky top-5 z-50 mx-auto w-[min(1180px,95%)] rounded-full border border-transparent px-3 transition-all',
+        'sticky top-5 z-50 mx-auto w-full max-w-[min(1320px,95%)] overflow-hidden rounded-full border border-transparent px-3 transition-all',
         scrolled ? 'border-border/70 bg-background/80 shadow-lg shadow-black/10 backdrop-blur-xl' : 'bg-transparent',
       )}
     >
@@ -87,7 +87,7 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
                   onClick={() => handleNavigate(item.id)}
                   aria-current={isActive ? 'page' : undefined}
                   className={cn(
-                    'relative z-10 flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-200',
+                    'relative z-10 flex items-center justify-center rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition-colors duration-200',
                     isActive
                       ? 'text-background drop-shadow-[0_10px_25px_rgba(15,23,42,0.18)]'
                       : 'text-muted-foreground hover:text-foreground',
