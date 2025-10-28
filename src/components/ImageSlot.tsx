@@ -124,7 +124,9 @@ export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps
   return (
     <figure
       className={cn(
-        'relative flex w-full overflow-hidden rounded-3xl',
+        'group relative flex w-full overflow-hidden rounded-3xl bg-slate-950/60 shadow-[0_18px_48px_-24px_rgba(15,23,42,0.85)] ring-1 ring-white/5 backdrop-blur-sm transition-[transform,shadow] duration-500',
+        "before:content-[''] before:pointer-events-none before:absolute before:inset-[1px] before:rounded-[inherit] before:bg-gradient-to-br before:from-white/20 before:via-white/8 before:to-white/0 before:opacity-0 before:transition before:duration-500 group-hover:before:opacity-100",
+        "after:content-[''] after:pointer-events-none after:absolute after:-inset-6 after:rounded-[40px] after:bg-gradient-to-br after:from-emerald-400/10 after:via-cyan-500/5 after:to-transparent after:opacity-0 after:blur-2xl after:transition after:duration-700 group-hover:after:opacity-100",
         withBorder && 'border border-border/40 backdrop-blur-lg supports-backdrop:bg-white/5',
         className,
       )}
@@ -132,7 +134,12 @@ export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps
       data-prompt={slot.prompt ?? ''}
     >
       <div className="relative h-full w-full" style={aspectStyle}>
-        <picture className={cn('block h-full w-full', status !== 'resolved' && 'opacity-0')}>
+        <picture
+          className={cn(
+            'block h-full w-full overflow-hidden rounded-[inherit] transition-transform duration-700 ease-out group-hover:scale-[1.03]',
+            status !== 'resolved' && 'opacity-0',
+          )}
+        >
           {slot.files.webp ? <source srcSet={slot.files.webp} type="image/webp" /> : null}
           {slot.files.svg ? <source srcSet={slot.files.svg} type="image/svg+xml" /> : null}
           <img
@@ -146,6 +153,12 @@ export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps
             loading="lazy"
           />
         </picture>
+        {status === 'resolved' ? (
+          <>
+            <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.18),_transparent_60%)] opacity-0 transition duration-500 group-hover:opacity-100" />
+            <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-white/10 mix-blend-screen" />
+          </>
+        ) : null}
         {status !== 'resolved' ? placeholder : null}
       </div>
     </figure>
