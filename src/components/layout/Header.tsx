@@ -82,7 +82,11 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
             {availableSections.map((item) => {
               const isActive = navActiveId === item.id;
               return (
-                <li key={item.id} className="relative isolate px-1 py-0.5">
+                <motion.li
+                  layout="position"
+                  key={item.id}
+                  className="relative isolate px-1 py-0.5"
+                >
                   <button
                     type="button"
                     onClick={() => handleNavigate(item.id)}
@@ -110,7 +114,7 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
                       />
                     </>
                   ) : null}
-                </li>
+                </motion.li>
               );
             })}
           </ul>
