@@ -10,6 +10,7 @@ export type ImageSlotProps = {
   alt?: string;
   className?: string;
   withBorder?: boolean;
+  priority?: boolean;
 };
 
 type SlotState = 'loading' | 'resolved' | 'missing';
@@ -25,7 +26,7 @@ const deriveInitialState = (slot: ImageSlotDefinition | null): SlotState => {
   return 'loading';
 };
 
-export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps) {
+export function ImageSlot({ slotId, alt, className, withBorder, priority = false }: ImageSlotProps) {
   const slot = useMemo(() => IMAGE_SLOTS[slotId] ?? null, [slotId]);
   const { reportSlotStatus } = useImageSlotRegistry();
   const [status, setStatus] = useState<SlotState>(() => deriveInitialState(slot));
@@ -40,6 +41,16 @@ export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps
     if (!slot) return;
     reportSlotStatus(slot.id, slot, status);
   }, [slot, status, reportSlotStatus]);
+
+  useEffect(() => {
+    if (!slot) return;
+    if (status === 'resolved' || status === 'missing') return;
+
+    if (slot.files.fallback) {
+      const fallbackImg = new Image();
+      fallbackImg.src = slot.files.fallback;
+    }
+  }, [slot, status]);
 
   const handleCopyPrompt = useCallback(async () => {
     if (!slot?.prompt || !navigator?.clipboard) return;
@@ -71,6 +82,12 @@ export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps
   };
 
   const primaryAsset = slot.files.webp ?? slot.files.svg ?? slot.files.fallback ?? '';
+  const loadingStrategy = priority ? 'eager' : 'lazy';
+  const fetchPriority = priority ? 'high' : 'auto';
+  const decodingStrategy = priority ? 'sync' : 'async';
+  const shimmerStyle = {
+    backgroundSize: '200% 100%',
+  } satisfies CSSProperties;
 
   const placeholder = (
     <div
@@ -84,6 +101,14 @@ export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps
       role="img"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.18),_transparent_60%)]" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/5 via-white/25 to-white/5 opacity-80"
+        aria-hidden="true"
+        style={{
+          ...shimmerStyle,
+          animation: reducedMotion ? undefined : 'shimmer 2.4s linear infinite',
+        }}
+      />
       <div className="relative flex flex-col items-center gap-3">
         <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-widest text-white/80 dark:bg-white/10">
           {slot.label}
@@ -132,7 +157,7 @@ export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps
       data-prompt={slot.prompt ?? ''}
     >
       <div className="relative h-full w-full" style={aspectStyle}>
-        <picture className={cn('block h-full w-full', status !== 'resolved' && 'opacity-0')}>
+        <picture className="block h-full w-full">
           {slot.files.webp ? <source srcSet={slot.files.webp} type="image/webp" /> : null}
           {slot.files.svg ? <source srcSet={slot.files.svg} type="image/svg+xml" /> : null}
           <img
@@ -140,10 +165,15 @@ export function ImageSlot({ slotId, alt, className, withBorder }: ImageSlotProps
             alt={resolvedAlt}
             width={slot.width}
             height={slot.height}
-            className="h-full w-full object-cover object-center"
+            loading={loadingStrategy}
+            fetchPriority={fetchPriority}
+            decoding={decodingStrategy}
+            className={cn(
+              'h-full w-full object-cover object-center transition-opacity duration-700 ease-out',
+              reducedMotion ? undefined : status === 'resolved' ? 'opacity-100' : 'opacity-0',
+            )}
             onLoad={handleLoad}
             onError={handleError}
-            loading="lazy"
           />
         </picture>
         {status !== 'resolved' ? placeholder : null}

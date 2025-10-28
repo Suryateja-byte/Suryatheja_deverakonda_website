@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { LayoutGroup, motion } from 'framer-motion';
 import type { MotionProps } from 'framer-motion';
 import { MoonStar, SunMedium } from 'lucide-react';
 
+import { useSmoothScroll } from '@components/layout/SmoothScrollProvider';
 import { useTheme } from '@components/providers/ThemeProvider';
+import { useDialogState } from '@components/providers/DialogStateProvider';
 import { Button } from '@components/ui/button';
 import { SECTION_NAV_ITEMS, type SectionNavItem } from '@config/sections';
 import { cn, prefersReducedMotion } from '@lib/utils';
@@ -25,6 +27,11 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
   const [scrolled, setScrolled] = useState(false);
   const [navActiveId, setNavActiveId] = useState(activeId);
   const { theme, resolvedTheme, toggleTheme } = useTheme();
+  const { isDialogOpen } = useDialogState();
+  const smoothScroll = useSmoothScroll();
+  const isDarkMode = (resolvedTheme ?? theme) === 'dark';
+  const logoSrc = isDarkMode ? '/assets/logo/SD_logo_light.png' : '/assets/logo/SD_logo_dark.png';
+  const reduceMotion = prefersReducedMotion();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 24);
@@ -34,8 +41,10 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
   }, []);
 
   useEffect(() => {
-    setNavActiveId(activeId);
-  }, [activeId]);
+    if (availableSections.some((section) => section.id === activeId)) {
+      setNavActiveId(activeId);
+    }
+  }, [activeId, availableSections]);
 
   const handleNavigate = (id: string) => {
     setNavActiveId(id);
@@ -49,19 +58,39 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
     const headerOffset = (headerElement?.offsetHeight ?? 0) + 16;
     const targetTop = target.getBoundingClientRect().top + window.scrollY - headerOffset;
     const top = Math.max(targetTop, 0);
-    const behavior = prefersReducedMotion() ? 'auto' : 'smooth';
+    const behavior = reduceMotion ? 'auto' : 'smooth';
+
+    if (smoothScroll?.lenis && !reduceMotion) {
+      smoothScroll.lenis.scrollTo(target, { offset: -headerOffset, duration: 1.05, easing: (t: number) => 1 - Math.pow(1 - t, 1.5) });
+      return;
+    }
 
     window.scrollTo({ top, behavior });
   };
 
   const displayName = resumeName?.trim() || 'Portfolio';
+  const titleSuffix = resumeTitle?.trim() ? ` – ${resumeTitle}` : '';
 
   return (
     <header
       data-site-header
+      style={
+        isDialogOpen || scrolled
+          ? {
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            }
+          : undefined
+      }
       className={cn(
-        'sticky top-5 z-50 mx-auto w-full max-w-[min(1320px,95%)] overflow-hidden rounded-full border border-transparent px-3 transition-all',
-        scrolled ? 'border-border/70 bg-background/80 shadow-lg shadow-black/10 backdrop-blur-xl' : 'bg-transparent',
+        'sticky top-5 z-50 mx-auto w-full max-w-[min(1320px,95%)] overflow-hidden rounded-full border px-3 transition-all duration-500 ease-out',
+        isDialogOpen
+          ? isDarkMode
+            ? 'border-slate-700/70 bg-slate-900/75 shadow-xl shadow-black/30'
+            : 'border-slate-300/70 bg-white/75 shadow-xl shadow-slate-900/20'
+          : scrolled
+            ? 'border-border/70 bg-background/80 shadow-lg shadow-black/10'
+            : 'border-transparent bg-transparent',
       )}
     >
       <nav className="flex items-center justify-between gap-4 px-4 py-3">
@@ -69,50 +98,64 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           {...hoverMotion}
           type="button"
           onClick={() => handleNavigate('hero')}
-          className="shrink-0 rounded-full bg-foreground/10 px-4 py-2 text-left text-sm font-semibold text-foreground/90 backdrop-blur-lg"
+          className="group flex shrink-0 items-center justify-center rounded-full bg-foreground/5 px-3 py-2 backdrop-blur-lg transition"
+          aria-label={`Navigate to hero section (${displayName}${titleSuffix})`}
         >
-          <div className="leading-tight">
-            <span className="block text-sm font-semibold text-foreground">{displayName}</span>
-            {resumeTitle ? <span className="block text-xs text-muted-foreground">{resumeTitle}</span> : null}
-          </div>
+          <img
+            src={logoSrc}
+            alt={`${displayName} logo`}
+            className="h-9 w-auto transition-transform duration-300 group-hover:scale-[1.04]"
+            loading="lazy"
+          />
+          <span className="sr-only">{displayName}{titleSuffix}</span>
         </motion.button>
 
-        <ul className="relative hidden flex-1 list-none items-center justify-center gap-1 md:flex">
-          {availableSections.map((item) => {
-            const isActive = navActiveId === item.id;
-            return (
-              <li key={item.id} className="relative isolate px-1 py-0.5">
-                <button
-                  type="button"
-                  onClick={() => handleNavigate(item.id)}
-                  aria-current={isActive ? 'page' : undefined}
-                  className={cn(
-                    'relative z-10 flex items-center justify-center rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition-colors duration-200',
-                    isActive
-                      ? 'text-background drop-shadow-[0_10px_25px_rgba(15,23,42,0.18)]'
-                      : 'text-muted-foreground hover:text-foreground',
-                  )}
-                >
-                  <span className="relative z-10">{item.label}</span>
-                </button>
-                {isActive ? (
-                  <>
-                    <motion.span
-                      layoutId="navHighlightBlur"
-                      className="pointer-events-none absolute inset-0 -z-20 rounded-full bg-foreground/45 blur-2xl"
-                      transition={{ type: 'spring', stiffness: 420, damping: 38, mass: 0.7 }}
-                    />
-                    <motion.span
-                      layoutId="navHighlight"
-                      className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-foreground via-foreground to-foreground/80 shadow-[0_20px_45px_-25px_rgba(15,23,42,0.55)]"
-                      transition={{ type: 'spring', stiffness: 540, damping: 34, mass: 0.9 }}
-                    />
-                  </>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
+        <LayoutGroup id="header-nav">
+          <ul className="relative hidden flex-1 list-none items-center justify-center gap-1 md:flex">
+            {availableSections.map((item) => {
+              const isActive = navActiveId === item.id;
+              return (
+                <motion.li key={item.id} layout className="relative isolate px-1 py-0.5">
+                  <button
+                    type="button"
+                    onClick={() => handleNavigate(item.id)}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={cn(
+                      'relative z-10 flex items-center justify-center rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition-colors duration-300 ease-out',
+                      isActive
+                        ? 'text-background drop-shadow-[0_10px_25px_rgba(15,23,42,0.18)]'
+                        : 'text-muted-foreground hover:text-foreground',
+                    )}
+                  >
+                    <span className="relative z-10">{item.label}</span>
+                  </button>
+                  {isActive ? (
+                    <>
+                      <motion.span
+                        layoutId="navHighlightBlur"
+                        className="pointer-events-none absolute inset-0 -z-20 rounded-full bg-foreground/45 blur-2xl"
+                        transition={
+                          reduceMotion
+                            ? { duration: 0.15 }
+                            : { type: 'spring', stiffness: 420, damping: 38, mass: 0.7 }
+                        }
+                      />
+                      <motion.span
+                        layoutId="navHighlight"
+                        className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-foreground via-foreground to-foreground/80 shadow-[0_20px_45px_-25px_rgba(15,23,42,0.55)]"
+                        transition={
+                          reduceMotion
+                            ? { duration: 0.15 }
+                            : { type: 'spring', stiffness: 540, damping: 34, mass: 0.9 }
+                        }
+                      />
+                    </>
+                  ) : null}
+                </motion.li>
+              );
+            })}
+          </ul>
+        </LayoutGroup>
 
         <div className="flex shrink-0 items-center gap-2">
           <Button

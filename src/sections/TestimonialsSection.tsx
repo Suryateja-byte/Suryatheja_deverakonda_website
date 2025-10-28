@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Quote } from 'lucide-react';
 
+import { Reveal } from '@components/animations/Reveal';
 import { ImageSlot } from '@components/ImageSlot';
 import { useResumeContext } from '@components/providers/ResumeProvider';
 import { Button } from '@components/ui/button';
@@ -25,14 +26,15 @@ export function TestimonialsSection() {
   if (!testimonials.length) return null;
 
   return (
-    <section id="testimonials" data-section="testimonials" className="container py-24">
+    <section id="testimonials" data-section="testimonials" className="py-24">
       <SectionHeading
         eyebrow="Testimonials"
         title="Trusted by cross-functional partners"
         description="Snapshots from collaborators who value energy, detail, and measurable follow-through."
       />
-      <div className="mt-12 rounded-[36px] border border-border/40 bg-card/70 p-10 shadow-lg">
-        <div className="flex items-start gap-6">
+      <Reveal y={28}>
+        <div className="mt-12 rounded-[36px] border border-border/40 bg-card/70 p-10 shadow-[0_28px_55px_-40px_rgba(15,23,42,0.55)]">
+          <div className="flex items-start gap-6">
           <div className="hidden sm:block">
             <ImageSlot slotId={avatarSlot} alt={active.name} className="h-24 w-24 rounded-3xl" />
           </div>
@@ -73,6 +75,7 @@ export function TestimonialsSection() {
           </div>
         </div>
       </div>
+      </Reveal>
     </section>
   );
 }

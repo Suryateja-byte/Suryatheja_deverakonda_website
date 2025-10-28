@@ -2,7 +2,10 @@ import { useMemo } from 'react';
 
 import { ResumeGuard } from '@components/ResumeGuard';
 import { useResumeContext } from '@components/providers/ResumeProvider';
+import { DialogStateProvider } from '@components/providers/DialogStateProvider';
 import { buildAvailableSections, Header } from '@components/layout/Header';
+import { AmbientBackground } from '@components/layout/AmbientBackground';
+import { SmoothScrollProvider } from '@components/layout/SmoothScrollProvider';
 import { Footer } from '@components/layout/Footer';
 import { AboutSection } from '@sections/AboutSection';
 import { ContactSection } from '@sections/ContactSection';
@@ -64,29 +67,34 @@ const App = () => {
   const { activeId } = useActiveSection(sectionIds);
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <ResumeGuard loading={loading} error={error}>
-        <div className="pb-16">
-          <Header
-            activeId={activeId}
-            resumeName={data?.name ?? 'Portfolio'}
-            resumeTitle={data?.title ?? ''}
-            availableSections={availableSections}
-          />
-          <div className="container mt-10 grid gap-16">
-            <HeroSection />
-            <AboutSection />
-            <ProjectsSection />
-            <SkillsSection />
-            <ExperienceSection />
-            {includeCertifications ? <CertificationsSection /> : null}
-            <TestimonialsSection />
-            <ContactSection />
-          </div>
-          <Footer />
-        </div>
-      </ResumeGuard>
-    </main>
+    <DialogStateProvider>
+      <SmoothScrollProvider>
+        <main className="relative min-h-screen bg-background text-foreground">
+          <AmbientBackground />
+          <ResumeGuard loading={loading} error={error}>
+            <div className="pb-20">
+              <Header
+                activeId={activeId}
+                resumeName={data?.name ?? 'Portfolio'}
+                resumeTitle={data?.title ?? ''}
+                availableSections={availableSections}
+              />
+              <div className="mx-auto mt-14 flex w-full max-w-[min(1320px,95%)] flex-col gap-28 px-4 sm:px-6 lg:px-8">
+                <HeroSection />
+                <AboutSection />
+                <ProjectsSection />
+                <SkillsSection />
+                <ExperienceSection />
+                {includeCertifications ? <CertificationsSection /> : null}
+                <TestimonialsSection />
+                <ContactSection />
+              </div>
+              <Footer />
+            </div>
+          </ResumeGuard>
+        </main>
+      </SmoothScrollProvider>
+    </DialogStateProvider>
   );
 };
 

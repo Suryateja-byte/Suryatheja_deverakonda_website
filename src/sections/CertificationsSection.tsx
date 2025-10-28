@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { ArrowUpRight } from 'lucide-react';
 
+import { Reveal } from '@components/animations/Reveal';
 import { useResumeContext } from '@components/providers/ResumeProvider';
 import { SectionHeading } from '@components/SectionHeading';
 import { Badge } from '@components/ui/badge';
@@ -23,7 +24,7 @@ export function CertificationsSection() {
   }
 
   return (
-    <section id="certifications" data-section="certifications" className="container py-24">
+    <section id="certifications" data-section="certifications" className="py-24">
       <SectionHeading
         eyebrow="Credentials"
         title="Certified learning sprints"
@@ -31,17 +32,22 @@ export function CertificationsSection() {
       />
 
       <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-        {certifications.map((certification) => {
+        {certifications.map((certification, index) => {
           const skills = certification.skills ?? [];
           const issueLabel = formatIssueDate(certification.issueDate);
 
           return (
-            <Card key={`${certification.name}-${certification.issuer}-${certification.issueDate}`} className="border-border/50 bg-card/70">
-              <CardHeader className="space-y-1 border-border/40 bg-background/40">
-                <h3 className="text-lg font-semibold text-foreground">{certification.name}</h3>
-                <p className="text-sm text-muted-foreground">{certification.issuer}</p>
-              </CardHeader>
-              <CardContent className="gap-6">
+            <Reveal
+              key={`${certification.name}-${certification.issuer}-${certification.issueDate}`}
+              delay={0.08 * index}
+              y={26}
+            >
+              <Card className="h-full border-border/50 bg-card/70 shadow-[0_28px_55px_-45px_rgba(15,23,42,0.55)] transition duration-300 ease-out hover:-translate-y-1 hover:border-border/70 hover:shadow-[0_34px_70px_-45px_rgba(15,23,42,0.65)]">
+                <CardHeader className="space-y-1 border-border/40 bg-background/40">
+                  <h3 className="text-lg font-semibold text-foreground">{certification.name}</h3>
+                  <p className="text-sm text-muted-foreground">{certification.issuer}</p>
+                </CardHeader>
+                <CardContent className="gap-6">
                 <div className="space-y-1 text-sm text-muted-foreground">
                   <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground/70">Issued</p>
                   <p className="text-sm text-foreground">{issueLabel}</p>
@@ -68,7 +74,8 @@ export function CertificationsSection() {
                   </a>
                 </CardFooter>
               ) : null}
-            </Card>
+              </Card>
+            </Reveal>
           );
         })}
       </div>
