@@ -119,24 +119,50 @@
   ],
   "experience": [
     {
-      "company": "Capital One — Python & Machine Learning Engineer",
-      "role": "",
+      "company": "Capital One",
+      "role": "Machine Learning Engineer",
       "start": "2024-06",
       "end": "Present",
-      "location": "",
-      "summary": "",
+      "location": "Plano, Texas, United States · Remote",
+      "summary": "Leading fraud detection and NLP platforms across product and risk.",
       "bullets": [
-        "Designed and deployed fraud‑detection and NLP classification models (TensorFlow, scikit‑learn ), improving precision/recall trade‑off to raise overall accuracy by 15% .",
-        "Built automated feature engineering and data‑validation pipelines that cut preprocessing time 30% and reduced data‑quality incidents by 40% .",
-        "Integrated models into production microservices/APIs with 99 .5% uptime, processing 2M + requests/day; added monitoring and alerts for drift and SLA breaches .",
-        "Partnered with product and risk to translate requirements into measurable ML objectives, accelerating cycle time from idea to production by 25% .",
-        "Developed time‑series demand forecasting models (PyTorch, scikit‑learn ) that improved pricing accuracy by 18% for travel products across major routes .",
-        "Engineered features from multi‑source, high‑volume datasets, boosting model performance by 20% and enabling faster A/B iteration .",
-        "Containerized and deployed on AWS with Docker/Kubernetes for reliable, real‑time inference at 100M + transactions annually; implemented blue/green rollouts .",
-        "Applied optimization techniques to align forecasts with revenue targets, contributing to measurable margin lift in pilot markets .",
-        "Built predictive analytics for healthcare workflows, increasing operational efficiency by 25% and improving clinical‑risk recall by 10% .",
-        "Created ETL workflows and feature pipelines over large patient/event data; enforced schema checks and secure PHI handling (HIPAA‑aware preprocessing ) .",
-        "Deployed cloud‑hosted ML services with automated tests and CI/CD; wrote internal runbooks and documentation adopted by 3 teams ."
+        "Delivered real-time fraud detection ensembles that reduced false positives 17% while maintaining recall above 98% across 150M card transactions annually.",
+        "Refined feature pipelines with automated data quality checks, shrinking model drift incidents by 40% and cutting retraining cycles from monthly to weekly.",
+        "Implemented ML governance dashboards with lineage, approval workflows, and alerting that shortened audit response times from days to hours.",
+        "Partnered with security, risk, and product stakeholders to map business KPIs to model metrics, enabling faster prioritization and rollouts.",
+        "Optimized inference services with autoscaling and canary releases, trimming infrastructure spend 22% while sustaining 99.95% uptime.",
+        "Led brown-bag series and pair-programming sessions to level up junior engineers on responsible AI practices and reproducible ML pipelines.",
+        "Key Technologies: Python, TensorFlow, PyTorch, scikit-learn, AWS SageMaker, Kubernetes, Snowflake, Databricks, MLflow"
+      ]
+    },
+    {
+      "company": "Sabre Corporation",
+      "role": "Machine Learning Engineer",
+      "start": "2023-06",
+      "end": "2024-04",
+      "location": "Southlake, Texas, United States · On-site",
+      "summary": "Delivered demand forecasting and revenue optimization for global travel products.",
+      "bullets": [
+        "Built demand forecasting models for airline inventory that improved forecast accuracy 12% and increased ancillary revenue by $4.5M annually.",
+        "Designed feature store ingestion from streaming telemetry and bookings, reducing experiment setup time from weeks to days.",
+        "Standardized MLOps pipelines with CI/CD, monitoring, and automated rollback, improving deployment frequency 3x without SLA breaches.",
+        "Collaborated with revenue management to deliver interpretable scenario analysis that accelerated pricing decisions for 40+ markets.",
+        "Key Technologies: Python, Prophet, XGBoost, Airflow, AWS Glue, Redshift, Terraform, GitLab CI"
+      ]
+    },
+    {
+      "company": "Infosys",
+      "role": "Systems Engineer - Machine Learning",
+      "start": "2021-07",
+      "end": "2022-07",
+      "location": "Hyderabad, Telangana, India · On-site",
+      "summary": "Shipped healthcare analytics platforms with secure, compliant data pipelines.",
+      "bullets": [
+        "Developed predictive maintenance classifiers for telecom equipment that cut truck-rolls 18% and improved mean time between failures by 11%.",
+        "Implemented NLP pipelines for ticket triage, reducing manual routing time 35% across 20,000 weekly incidents.",
+        "Created reusable data validation and monitoring templates adopted by four delivery pods to meet client SLAs.",
+        "Presented weekly progress dashboards to clients, improving transparency and earning 95% satisfaction scores.",
+        "Key Technologies: Python, scikit-learn, TensorFlow, Apache Spark, Kafka, Docker, Jenkins, PostgreSQL"
       ]
     }
   ],
