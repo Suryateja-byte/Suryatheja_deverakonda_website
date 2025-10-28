@@ -6,7 +6,7 @@ import { MoonStar, SunMedium } from 'lucide-react';
 import { useTheme } from '@components/providers/ThemeProvider';
 import { Button } from '@components/ui/button';
 import { SECTION_NAV_ITEMS, type SectionNavItem } from '@config/sections';
-import { cn } from '@lib/utils';
+import { cn, prefersReducedMotion } from '@lib/utils';
 
 interface HeaderProps {
   activeId: string;
@@ -23,6 +23,7 @@ const hoverMotion: MotionProps = {
 
 export function Header({ activeId, resumeName, resumeTitle, availableSections }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
+  const [navActiveId, setNavActiveId] = useState(activeId);
   const { theme, resolvedTheme, toggleTheme } = useTheme();
 
   useEffect(() => {
@@ -32,15 +33,32 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setNavActiveId(activeId);
+  }, [activeId]);
+
   const handleNavigate = (id: string) => {
+    setNavActiveId(id);
+
+    if (typeof document === 'undefined' || typeof window === 'undefined') return;
+
     const target = document.querySelector<HTMLElement>(`[data-section="${id}"]`);
-    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!target) return;
+
+    const headerElement = document.querySelector<HTMLElement>('[data-site-header]');
+    const headerOffset = (headerElement?.offsetHeight ?? 0) + 16;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    const top = Math.max(targetTop, 0);
+    const behavior = prefersReducedMotion() ? 'auto' : 'smooth';
+
+    window.scrollTo({ top, behavior });
   };
 
   const displayName = resumeName?.trim() || 'Portfolio';
 
   return (
     <header
+      data-site-header
       className={cn(
         'sticky top-5 z-50 mx-auto w-[min(1180px,95%)] rounded-full border border-transparent px-3 transition-all',
         scrolled ? 'border-border/70 bg-background/80 shadow-lg shadow-black/10 backdrop-blur-xl' : 'bg-transparent',
@@ -59,21 +77,38 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           </div>
         </motion.button>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="relative hidden list-none items-center gap-1 md:flex">
           {availableSections.map((item) => {
-            const isActive = activeId === item.id;
+            const isActive = navActiveId === item.id;
             return (
-              <li key={item.id}>
+              <li key={item.id} className="relative isolate px-1 py-0.5">
                 <button
                   type="button"
                   onClick={() => handleNavigate(item.id)}
+                  aria-current={isActive ? 'page' : undefined}
                   className={cn(
-                    'rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition',
-                    isActive ? 'bg-foreground text-background shadow-sm' : 'text-muted-foreground hover:text-foreground',
+                    'relative z-10 flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-200',
+                    isActive
+                      ? 'text-background drop-shadow-[0_10px_25px_rgba(15,23,42,0.18)]'
+                      : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
-                  {item.label}
+                  <span className="relative z-10">{item.label}</span>
                 </button>
+                {isActive ? (
+                  <>
+                    <motion.span
+                      layoutId="navHighlightBlur"
+                      className="pointer-events-none absolute inset-0 -z-20 rounded-full bg-foreground/45 blur-2xl"
+                      transition={{ type: 'spring', stiffness: 420, damping: 38, mass: 0.7 }}
+                    />
+                    <motion.span
+                      layoutId="navHighlight"
+                      className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-foreground via-foreground to-foreground/80 shadow-[0_20px_45px_-25px_rgba(15,23,42,0.55)]"
+                      transition={{ type: 'spring', stiffness: 540, damping: 34, mass: 0.9 }}
+                    />
+                  </>
+                ) : null}
               </li>
             );
           })}
