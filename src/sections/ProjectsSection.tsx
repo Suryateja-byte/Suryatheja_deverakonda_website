@@ -110,11 +110,19 @@ export function ProjectsSection() {
                   </div>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col space-y-5 px-5 py-6">
-                  <div className="grid grid-cols-[2fr_1fr] gap-3">
-                    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}>
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr]">
+                    <motion.div
+                      className="hidden md:block"
+                      whileHover={{ y: -4 }}
+                      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    >
                       <ImageSlot slotId={project.desktopSlot.id} alt={`${project.name} desktop`} className="rounded-2xl" />
                     </motion.div>
-                    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}>
+                    <motion.div
+                      className="md:h-full"
+                      whileHover={{ y: -4 }}
+                      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    >
                       <ImageSlot slotId={project.mobileSlot.id} alt={`${project.name} mobile`} className="rounded-2xl" />
                     </motion.div>
                   </div>
