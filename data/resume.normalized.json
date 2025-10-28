@@ -141,7 +141,7 @@
       "start": "2023-06",
       "end": "2024-04",
       "location": "Southlake, Texas, United States · On-site",
-      "summary": "Delivered demand forecasting and revenue optimisation for global travel products.",
+      "summary": "Delivered demand forecasting and revenue optimization for global travel products.",
       "bullets": [
         "Built demand forecasting models for airline inventory that improved forecast accuracy 12% and increased ancillary revenue by $4.5M annually.",
         "Designed feature store ingestion from streaming telemetry and bookings, reducing experiment setup time from weeks to days.",
