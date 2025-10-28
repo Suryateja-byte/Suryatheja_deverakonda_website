@@ -40,6 +40,14 @@ const resumeTestimonialSchema = z.object({
   quote: z.string().catch('').default(''),
 });
 
+const resumeCertificationSchema = z.object({
+  name: z.string().catch('').default(''),
+  issuer: z.string().catch('').default(''),
+  issueDate: z.string().catch('').default(''),
+  credentialUrl: z.string().optional().catch('').default(''),
+  skills: z.array(z.string()).optional().catch([]).default([]),
+});
+
 export const resumeSchema = z.object({
   name: z.string().min(2),
   title: z.string().optional().catch('').default(''),
@@ -54,8 +62,10 @@ export const resumeSchema = z.object({
   experience: z.array(resumeExperienceSchema).optional().catch([]).default([]),
   education: z.array(resumeEducationSchema).optional().catch([]).default([]),
   testimonials: z.array(resumeTestimonialSchema).optional().catch([]).default([]),
+  certifications: z.array(resumeCertificationSchema).optional().catch([]).default([]),
 });
 
+export type ResumeCertification = z.infer<typeof resumeCertificationSchema>;
 export type Resume = z.infer<typeof resumeSchema>;
 
 const RESUME_ENDPOINTS = ['/data/resume.normalized.json', '/data/resume.json'];

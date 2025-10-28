@@ -134,15 +134,18 @@ export function buildAvailableSections({
   includeTestimonials,
   includeBlog,
   includeEducation,
+  includeCertifications,
 }: {
   includeTestimonials: boolean;
   includeBlog: boolean;
   includeEducation: boolean;
+  includeCertifications: boolean;
 }) {
   return SECTION_NAV_ITEMS.filter((item) => {
     if (item.id === 'testimonials' && !includeTestimonials) return false;
     if (item.id === 'blog' && !includeBlog) return false;
     if (item.id === 'education' && !includeEducation) return false;
+    if (item.id === 'certifications' && !includeCertifications) return false;
     return true;
   });
 }

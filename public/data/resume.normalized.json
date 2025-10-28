@@ -147,5 +147,31 @@
       "year": ""
     }
   ],
-  "testimonials": []
+  "testimonials": [],
+  "certifications": [
+    {
+      "name": "Generative AI with Large Language Models",
+      "issuer": "Coursera · DeepLearning.AI",
+      "issueDate": "2024-05-15",
+      "credentialUrl": "https://www.coursera.org/account/accomplishments/certificate/GENERATIVE-AI-LLMS",
+      "skills": [
+        "Prompt engineering",
+        "LLM fine-tuning",
+        "Responsible AI"
+      ]
+    },
+    {
+      "name": "CCBP 4.0 Intensive - Full Stack Product Engineering",
+      "issuer": "NxtWave",
+      "issueDate": "2023-11-01",
+      "credentialUrl": "https://certificates.ccbp.in/intensive/full-stack-product-engineering",
+      "skills": [
+        "React",
+        "Node.js",
+        "REST APIs",
+        "Database design",
+        "DevOps"
+      ]
+    }
+  ]
 }

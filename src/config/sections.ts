@@ -9,6 +9,7 @@ export const SECTION_NAV_ITEMS: SectionNavItem[] = [
   { id: 'projects', label: 'Projects' },
   { id: 'skills', label: 'Skills' },
   { id: 'experience', label: 'Experience' },
+  { id: 'certifications', label: 'Certifications' },
   { id: 'education', label: 'Education' },
   { id: 'testimonials', label: 'Testimonials' },
   { id: 'blog', label: 'Articles' },
