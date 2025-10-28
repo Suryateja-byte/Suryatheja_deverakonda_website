@@ -17,6 +17,7 @@ const DialogOverlay = React.forwardRef<React.ElementRef<typeof DialogPrimitive.O
     return (
       <DialogPrimitive.Overlay asChild ref={ref} {...props}>
         <motion.div
+          data-lenis-prevent
           className={cn(
             'fixed inset-0 z-40',
             isDarkMode
@@ -27,6 +28,7 @@ const DialogOverlay = React.forwardRef<React.ElementRef<typeof DialogPrimitive.O
           style={{
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
+            willChange: 'opacity',
           }}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -36,6 +38,17 @@ const DialogOverlay = React.forwardRef<React.ElementRef<typeof DialogPrimitive.O
             ease: [0.22, 1, 0.36, 1],
             opacity: { duration: 0.3 }
           }}
+          onAnimationComplete={(definition) => {
+            // Remove will-change after animation
+            if (definition === 'animate' || definition === 'exit') {
+              const elements = document.querySelectorAll('[data-radix-dialog-overlay]');
+              elements.forEach((el) => {
+                if (el instanceof HTMLElement) {
+                  el.style.willChange = 'auto';
+                }
+              });
+            }
+          }}
         />
       </DialogPrimitive.Overlay>
     );
@@ -43,14 +56,31 @@ const DialogOverlay = React.forwardRef<React.ElementRef<typeof DialogPrimitive.O
 );
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-const DialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { open?: boolean }>(
-  ({ className, children, open, ...props }, ref) => (
-    <AnimatePresence mode="wait">
+const DialogContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    open?: boolean;
+    onExitComplete?: () => void;
+  }
+>(
+  ({ className, children, open, onExitComplete, ...props }, ref) => (
+    <AnimatePresence
+      mode="wait"
+      onExitComplete={() => {
+        // Ensure cleanup after exit animation completes
+        if (typeof window !== 'undefined') {
+          // Force a reflow to prevent flickering
+          void document.body.offsetHeight;
+        }
+        onExitComplete?.();
+      }}
+    >
       {open && (
         <DialogPortal forceMount>
           <DialogOverlay />
           <DialogPrimitive.Content asChild {...props}>
             <motion.div
+              data-lenis-prevent
               ref={ref}
               className={cn(
                 'fixed inset-x-4 top-[10%] z-50 mx-auto w-full max-w-3xl origin-center rounded-3xl border border-border/60 bg-background/95 p-8 shadow-2xl',
@@ -59,6 +89,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWitho
               style={{
                 backdropFilter: 'blur(24px) saturate(190%)',
                 WebkitBackdropFilter: 'blur(24px) saturate(190%)',
+                willChange: 'opacity, transform',
               }}
               initial={{ opacity: 0, y: 24, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -67,6 +98,15 @@ const DialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWitho
                 duration: 0.35,
                 ease: [0.22, 1, 0.36, 1],
                 opacity: { duration: 0.3 }
+              }}
+              onAnimationComplete={(definition) => {
+                // Remove will-change after animation to free GPU
+                if (definition === 'animate' || definition === 'exit') {
+                  const element = ref && 'current' in ref ? ref.current : null;
+                  if (element && element.style) {
+                    element.style.willChange = 'auto';
+                  }
+                }
               }}
             >
               {children}

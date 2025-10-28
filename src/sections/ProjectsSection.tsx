@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef } from 'react';
+import { useCallback, useMemo, useState, useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, ExternalLink, Github } from 'lucide-react';
 
@@ -20,6 +20,29 @@ function ProjectDialog({ project }: { project: ProjectCard }) {
   const smoothScroll = useSmoothScroll();
   const { setDialogOpen } = useDialogState();
   const reduceMotion = useReducedMotion();
+  const resumeScrollAfterExit = useRef(false);
+  const pendingClose = useRef(false);
+
+  const handleDialogExitComplete = useCallback(() => {
+    if (!resumeScrollAfterExit.current) {
+      return;
+    }
+
+    if (!pendingClose.current) {
+      resumeScrollAfterExit.current = false;
+      return;
+    }
+
+    // Wait for the dialog exit animation to flush before re-enabling Lenis
+    window.requestAnimationFrame(() => {
+      setDialogOpen(false);
+      window.requestAnimationFrame(() => {
+        smoothScroll?.start();
+      });
+    });
+    resumeScrollAfterExit.current = false;
+    pendingClose.current = false;
+  }, [setDialogOpen, smoothScroll]);
 
   if (!hasHighlights && !hasLinks) {
     return null;
@@ -57,12 +80,21 @@ function ProjectDialog({ project }: { project: ProjectCard }) {
       open={open}
       onOpenChange={(value) => {
         setOpen(value);
-        setDialogOpen(value);
         if (value) {
+          pendingClose.current = false;
+          setDialogOpen(true);
+          resumeScrollAfterExit.current = false;
           smoothScroll?.stop();
         } else {
-          // Delay smooth scroll resume to allow dialog exit animation to complete (300ms animation + 100ms buffer)
-          window.setTimeout(() => smoothScroll?.start(), 400);
+          pendingClose.current = true;
+          if (reduceMotion) {
+            smoothScroll?.start();
+            pendingClose.current = false;
+            setDialogOpen(false);
+            return;
+          }
+
+          resumeScrollAfterExit.current = true;
         }
       }}
     >
@@ -81,7 +113,11 @@ function ProjectDialog({ project }: { project: ProjectCard }) {
           </Button>
         </motion.div>
       </DialogTrigger>
-      <DialogContent open={open} className="max-h-[min(80vh,720px)] overflow-y-auto rounded-3xl border border-border/50 bg-card/95">
+      <DialogContent
+        open={open}
+        onExitComplete={handleDialogExitComplete}
+        className="max-h-[min(80vh,720px)] overflow-y-auto rounded-3xl border border-border/50 bg-card/95"
+      >
         <motion.div
           className="space-y-5"
           initial={reduceMotion ? undefined : { opacity: 0, y: 20 }}
@@ -271,21 +307,9 @@ export function ProjectsSection() {
           const highlightPreview = project.highlights.length ? project.highlights.slice(0, 3) : [project.summary];
           const priorityAsset = index < 2;
 
-          const cardRef = useRef<HTMLDivElement>(null);
-
-          const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-            if (!cardRef.current) return;
-            const rect = cardRef.current.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            cardRef.current.style.setProperty('--mouse-x', `${x}px`);
-            cardRef.current.style.setProperty('--mouse-y', `${y}px`);
-          };
-
           return (
             <motion.div
               key={project.id}
-              ref={cardRef}
               variants={reduceMotion ? undefined : cardVariants}
               whileHover={reduceMotion ? undefined : {
                 y: -12,
@@ -296,7 +320,14 @@ export function ProjectsSection() {
                   damping: 25
                 }
               }}
-              onMouseMove={handleMouseMove}
+              onMouseMove={(event) => {
+                const cardElement = event.currentTarget;
+                const rect = cardElement.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                cardElement.style.setProperty('--mouse-x', `${x}px`);
+                cardElement.style.setProperty('--mouse-y', `${y}px`);
+              }}
               style={{ willChange: 'transform' }}
             >
               <Card className="group relative flex h-full flex-col overflow-hidden border-border/50 bg-card/70 shadow-[0_28px_55px_-40px_rgba(15,23,42,0.6)] transition-all duration-500 ease-out hover:border-border/90 hover:bg-card/90 hover:shadow-[0_40px_80px_-45px_rgba(15,23,42,0.85)]">

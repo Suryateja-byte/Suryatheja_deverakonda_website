@@ -33,11 +33,21 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
     root.style.scrollBehavior = 'auto';
 
     const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t: number) => 1 - Math.pow(1 - t, 1.6),
+      duration: 1.2,
+      easing: (t: number) => {
+        // Premium easing: smooth start, buttery end
+        // Apple-style momentum curve
+        return t < 0.5
+          ? 4 * t * t * t
+          : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      },
       smoothWheel: true,
       gestureOrientation: 'vertical',
-      touchMultiplier: 1.1,
+      touchMultiplier: 2,
+      wheelMultiplier: 1.0,
+      infinite: false,
+      // Smooth lerp for ultra-smooth deceleration
+      lerp: 0.085,
     });
 
     lenisRef.current = lenis;
@@ -73,6 +83,10 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
   const start = useCallback(() => {
     const instance = lenisRef.current;
     if (!instance) return;
+
+    // Gentle restart to prevent layout shifts
+    // Recalculate dimensions before starting
+    instance.resize();
     instance.start();
     setIsEnabled(true);
   }, []);

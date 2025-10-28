@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LayoutGroup, motion } from 'framer-motion';
 import type { MotionProps } from 'framer-motion';
 import { MoonStar, SunMedium } from 'lucide-react';
@@ -26,6 +26,9 @@ const hoverMotion: MotionProps = {
 export function Header({ activeId, resumeName, resumeTitle, availableSections }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [navActiveId, setNavActiveId] = useState(activeId);
+  const [pendingNavId, setPendingNavId] = useState<string | null>(null);
+  const pendingTimerRef = useRef<number | null>(null);
+  const fallbackAnimationRef = useRef<number | null>(null);
   const { theme, resolvedTheme, toggleTheme } = useTheme();
   const { isDialogOpen } = useDialogState();
   const smoothScroll = useSmoothScroll();
@@ -41,31 +44,162 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
   }, []);
 
   useEffect(() => {
-    if (availableSections.some((section) => section.id === activeId)) {
+    if (!pendingNavId && availableSections.some((section) => section.id === activeId)) {
       setNavActiveId(activeId);
+      return;
     }
-  }, [activeId, availableSections]);
+
+    if (pendingNavId && activeId === pendingNavId) {
+      setNavActiveId(activeId);
+      setPendingNavId(null);
+      if (pendingTimerRef.current !== null) {
+        window.clearTimeout(pendingTimerRef.current);
+        pendingTimerRef.current = null;
+      }
+    }
+  }, [activeId, availableSections, pendingNavId]);
+
+  useEffect(
+    () => () => {
+      if (pendingTimerRef.current !== null) {
+        window.clearTimeout(pendingTimerRef.current);
+      }
+      if (fallbackAnimationRef.current !== null) {
+        window.cancelAnimationFrame(fallbackAnimationRef.current);
+      }
+    },
+    [],
+  );
+
+  const cancelFallbackAnimation = () => {
+    if (fallbackAnimationRef.current !== null) {
+      window.cancelAnimationFrame(fallbackAnimationRef.current);
+      fallbackAnimationRef.current = null;
+    }
+  };
+
+  const animateScrollFallback = (to: number) => {
+    cancelFallbackAnimation();
+
+    const start = window.scrollY || window.pageYOffset;
+    const distance = to - start;
+    if (Math.abs(distance) < 1) {
+      window.scrollTo({ top: to });
+      return;
+    }
+
+    const baseDuration = 0.9;
+    const distanceFactor = Math.min(2.5, Math.abs(distance) / 1200);
+    const durationMs = Math.max(600, Math.min(2200, (baseDuration + distanceFactor * 0.75) * 1000));
+    const anticipationCutoff = 0.1;
+
+    const ease = (t: number) => {
+      if (t < anticipationCutoff) {
+        return Math.pow((t / anticipationCutoff) * 1.1, 1.25) * 0.06;
+      }
+      const adjustedT = (t - anticipationCutoff) / (1 - anticipationCutoff);
+      return 0.06 + (1 - Math.pow(1 - adjustedT, 3.6)) * 0.94;
+    };
+
+    let startTime = 0;
+    const step = (timestamp: number) => {
+      if (!startTime) {
+        startTime = timestamp;
+      }
+
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(1, elapsed / durationMs);
+      const eased = ease(progress);
+
+      window.scrollTo({
+        top: start + distance * eased,
+        behavior: 'auto',
+      });
+
+      if (progress < 1) {
+        fallbackAnimationRef.current = window.requestAnimationFrame(step);
+      } else {
+        fallbackAnimationRef.current = null;
+      }
+    };
+
+    fallbackAnimationRef.current = window.requestAnimationFrame(step);
+  };
+
+  // Keeps the highlight anchored on the tapped nav item while the scroll animation is in flight.
+  const schedulePendingNavReset = (targetId: string) => {
+    setPendingNavId(targetId);
+    if (pendingTimerRef.current !== null) {
+      window.clearTimeout(pendingTimerRef.current);
+    }
+    pendingTimerRef.current = window.setTimeout(() => {
+      setPendingNavId(null);
+      pendingTimerRef.current = null;
+    }, 2400);
+  };
 
   const handleNavigate = (id: string) => {
-    setNavActiveId(id);
-
     if (typeof document === 'undefined' || typeof window === 'undefined') return;
+
+    cancelFallbackAnimation();
 
     const target = document.querySelector<HTMLElement>(`[data-section="${id}"]`);
     if (!target) return;
+
+    // Anticipation delay: Update highlight first, then scroll
+    // This creates a more intentional, premium feel
+    requestAnimationFrame(() => {
+      setNavActiveId(id);
+      schedulePendingNavReset(id);
+    });
 
     const headerElement = document.querySelector<HTMLElement>('[data-site-header]');
     const headerOffset = (headerElement?.offsetHeight ?? 0) + 16;
     const targetTop = target.getBoundingClientRect().top + window.scrollY - headerOffset;
     const top = Math.max(targetTop, 0);
-    const behavior = reduceMotion ? 'auto' : 'smooth';
 
-    if (smoothScroll?.lenis && !reduceMotion) {
-      smoothScroll.lenis.scrollTo(target, { offset: -headerOffset, duration: 1.05, easing: (t: number) => 1 - Math.pow(1 - t, 1.5) });
+    if (smoothScroll?.lenis) {
+      const lenisInstance = smoothScroll.lenis;
+      if (!smoothScroll.isEnabled) {
+        smoothScroll.start();
+      }
+
+      const currentPosition = lenisInstance.scroll;
+      const distance = Math.abs(currentPosition - top);
+
+      // Premium duration calculation with min/max bounds
+      const baseDuration = 0.9;
+      const distanceFactor = Math.min(2.5, distance / 1200);
+      const duration = Math.max(0.6, Math.min(2.2, baseDuration + distanceFactor * 0.75));
+
+      // Ultra-smooth with slight delay for highlight to settle (120ms)
+      setTimeout(() => {
+        lenisInstance.scrollTo(target, {
+          offset: -headerOffset,
+          duration,
+          // Premium easing: ease-out-expo for buttery deceleration
+          easing: (t: number) => {
+            // Custom bezier: anticipation + smooth deceleration
+            // Starts slow (anticipation), accelerates, then smooth ease-out
+            if (t < 0.1) {
+              // Slight anticipation (10% of journey)
+              return Math.pow(t * 10, 1.2) * 0.05;
+            }
+            // Main movement with expo ease-out
+            const adjustedT = (t - 0.1) / 0.9;
+            return 0.05 + (1 - Math.pow(1 - adjustedT, 3.5)) * 0.95;
+          },
+          // Smooth velocity inheritance
+          lerp: 0.08,
+        });
+      }, 120);
       return;
     }
 
-    window.scrollTo({ top, behavior });
+    // Fallback for browsers without Lenis
+    setTimeout(() => {
+      animateScrollFallback(top);
+    }, 120);
   };
 
   const displayName = resumeName?.trim() || 'Portfolio';
@@ -137,7 +271,13 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
                         transition={
                           reduceMotion
                             ? { duration: 0.15 }
-                            : { type: 'spring', stiffness: 420, damping: 38, mass: 0.7 }
+                            : {
+                                type: 'spring',
+                                stiffness: 380,
+                                damping: 42,
+                                mass: 0.8,
+                                velocity: 2,
+                              }
                         }
                       />
                       <motion.span
@@ -146,7 +286,13 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
                         transition={
                           reduceMotion
                             ? { duration: 0.15 }
-                            : { type: 'spring', stiffness: 540, damping: 34, mass: 0.9 }
+                            : {
+                                type: 'spring',
+                                stiffness: 400,
+                                damping: 40,
+                                mass: 0.85,
+                                velocity: 2,
+                              }
                         }
                       />
                     </>

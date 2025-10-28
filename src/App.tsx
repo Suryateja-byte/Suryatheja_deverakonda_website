@@ -69,7 +69,14 @@ const App = () => {
   return (
     <DialogStateProvider>
       <SmoothScrollProvider>
-        <main className="relative min-h-screen bg-background text-foreground">
+        <main
+          className="relative min-h-screen bg-background text-foreground"
+          style={{
+            // Prevent layout shifts during dialog transitions
+            transform: 'translateZ(0)',
+            willChange: 'auto',
+          }}
+        >
           <AmbientBackground />
           <ResumeGuard loading={loading} error={error}>
             <div className="pb-20">
