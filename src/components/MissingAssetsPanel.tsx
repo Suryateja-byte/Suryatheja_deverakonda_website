@@ -125,7 +125,12 @@ export function MissingAssetsToggle() {
 
   return (
     <div className="relative">
-      <Button variant={missing.length ? 'outline' : 'ghost'} size="sm" onClick={() => setOpen((prev) => !prev)}>
+      <Button
+        variant={missing.length ? 'outline' : 'ghost'}
+        size="sm"
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex-shrink-0 whitespace-nowrap"
+      >
         <ImageIcon className="h-4 w-4" />
         <span>{label}</span>
       </Button>
