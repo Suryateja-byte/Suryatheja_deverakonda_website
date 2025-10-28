@@ -124,7 +124,7 @@
       "start": "2024-06",
       "end": "Present",
       "location": "Plano, Texas, United States · Remote",
-      "summary": "",
+      "summary": "Leading fraud detection and NLP platforms across product and risk.",
       "bullets": [
         "Delivered real-time fraud detection ensembles that reduced false positives 17% while maintaining recall above 98% across 150M card transactions annually.",
         "Refined feature pipelines with automated data quality checks, shrinking model drift incidents by 40% and cutting retraining cycles from monthly to weekly.",
@@ -141,7 +141,7 @@
       "start": "2023-06",
       "end": "2024-04",
       "location": "Southlake, Texas, United States · On-site",
-      "summary": "",
+      "summary": "Delivered demand forecasting and revenue optimisation for global travel products.",
       "bullets": [
         "Built demand forecasting models for airline inventory that improved forecast accuracy 12% and increased ancillary revenue by $4.5M annually.",
         "Designed feature store ingestion from streaming telemetry and bookings, reducing experiment setup time from weeks to days.",
@@ -156,7 +156,7 @@
       "start": "2021-07",
       "end": "2022-07",
       "location": "Hyderabad, Telangana, India · On-site",
-      "summary": "",
+      "summary": "Shipped healthcare analytics platforms with secure, compliant data pipelines.",
       "bullets": [
         "Developed predictive maintenance classifiers for telecom equipment that cut truck-rolls 18% and improved mean time between failures by 11%.",
         "Implemented NLP pipelines for ticket triage, reducing manual routing time 35% across 20,000 weekly incidents.",
