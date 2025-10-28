@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { LayoutGroup, motion } from 'framer-motion';
 import type { MotionProps } from 'framer-motion';
 import { MoonStar, SunMedium } from 'lucide-react';
 
@@ -77,42 +77,44 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           </div>
         </motion.button>
 
-        <ul className="relative hidden flex-1 list-none items-center justify-center gap-1 md:flex">
-          {availableSections.map((item) => {
-            const isActive = navActiveId === item.id;
-            return (
-              <li key={item.id} className="relative isolate px-1 py-0.5">
-                <button
-                  type="button"
-                  onClick={() => handleNavigate(item.id)}
-                  aria-current={isActive ? 'page' : undefined}
-                  className={cn(
-                    'relative z-10 flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-200',
-                    isActive
-                      ? 'text-background drop-shadow-[0_10px_25px_rgba(15,23,42,0.18)]'
-                      : 'text-muted-foreground hover:text-foreground',
-                  )}
-                >
-                  <span className="relative z-10">{item.label}</span>
-                </button>
-                {isActive ? (
-                  <>
-                    <motion.span
-                      layoutId="navHighlightBlur"
-                      className="pointer-events-none absolute inset-0 -z-20 rounded-full bg-foreground/45 blur-2xl"
-                      transition={{ type: 'spring', stiffness: 420, damping: 38, mass: 0.7 }}
-                    />
-                    <motion.span
-                      layoutId="navHighlight"
-                      className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-foreground via-foreground to-foreground/80 shadow-[0_20px_45px_-25px_rgba(15,23,42,0.55)]"
-                      transition={{ type: 'spring', stiffness: 540, damping: 34, mass: 0.9 }}
-                    />
-                  </>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
+        <LayoutGroup id="section-nav" initial={false}>
+          <ul className="relative hidden flex-1 list-none items-center justify-center gap-1 md:flex">
+            {availableSections.map((item) => {
+              const isActive = navActiveId === item.id;
+              return (
+                <li key={item.id} className="relative isolate px-1 py-0.5">
+                  <button
+                    type="button"
+                    onClick={() => handleNavigate(item.id)}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={cn(
+                      'relative z-10 flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-200',
+                      isActive
+                        ? 'text-background drop-shadow-[0_10px_25px_rgba(15,23,42,0.18)]'
+                        : 'text-muted-foreground hover:text-foreground',
+                    )}
+                  >
+                    <span className="relative z-10">{item.label}</span>
+                  </button>
+                  {isActive ? (
+                    <>
+                      <motion.span
+                        layoutId="navHighlightBlur"
+                        className="pointer-events-none absolute inset-0 -z-20 rounded-full bg-foreground/45 blur-2xl"
+                        transition={{ type: 'spring', stiffness: 420, damping: 38, mass: 0.7 }}
+                      />
+                      <motion.span
+                        layoutId="navHighlight"
+                        className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-foreground via-foreground to-foreground/80 shadow-[0_20px_45px_-25px_rgba(15,23,42,0.55)]"
+                        transition={{ type: 'spring', stiffness: 540, damping: 34, mass: 0.9 }}
+                      />
+                    </>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        </LayoutGroup>
 
         <div className="flex shrink-0 items-center gap-2">
           <Button
