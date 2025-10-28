@@ -142,8 +142,13 @@
   ],
   "education": [
     {
-      "school": "Southern Arkansas University — M .S ., Computer Science | Aug 2022 – May 2024",
-      "degree": "Osmania University — B .S ., Computer Science | Aug 2016 – May 2021",
+      "school": "Southern Arkansas University | Aug 2022 – May 2024",
+      "degree": "Master's degree, Computer and Information Sciences, General",
+      "year": ""
+    },
+    {
+      "school": "Osmania University | May 2019",
+      "degree": "Bachelor of Technology (BTech), Computer Science",
       "year": ""
     }
   ],
