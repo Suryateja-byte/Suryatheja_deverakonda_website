@@ -69,7 +69,7 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           {...hoverMotion}
           type="button"
           onClick={() => handleNavigate('hero')}
-          className="rounded-full bg-foreground/10 px-4 py-2 text-left text-sm font-semibold text-foreground/90 backdrop-blur-lg"
+          className="shrink-0 rounded-full bg-foreground/10 px-4 py-2 text-left text-sm font-semibold text-foreground/90 backdrop-blur-lg"
         >
           <div className="leading-tight">
             <span className="block text-sm font-semibold text-foreground">{displayName}</span>
@@ -77,7 +77,7 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           </div>
         </motion.button>
 
-        <ul className="relative hidden list-none items-center gap-1 md:flex">
+        <ul className="relative hidden flex-1 list-none items-center justify-center gap-1 md:flex">
           {availableSections.map((item) => {
             const isActive = navActiveId === item.id;
             return (
@@ -114,7 +114,7 @@ export function Header({ activeId, resumeName, resumeTitle, availableSections }:
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
@@ -134,15 +134,18 @@ export function buildAvailableSections({
   includeTestimonials,
   includeBlog,
   includeEducation,
+  includeCertifications,
 }: {
   includeTestimonials: boolean;
   includeBlog: boolean;
   includeEducation: boolean;
+  includeCertifications: boolean;
 }) {
   return SECTION_NAV_ITEMS.filter((item) => {
     if (item.id === 'testimonials' && !includeTestimonials) return false;
     if (item.id === 'blog' && !includeBlog) return false;
     if (item.id === 'education' && !includeEducation) return false;
+    if (item.id === 'certifications' && !includeCertifications) return false;
     return true;
   });
 }
