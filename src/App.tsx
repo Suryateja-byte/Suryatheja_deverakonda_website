@@ -7,6 +7,7 @@ import { buildAvailableSections, Header } from '@components/layout/Header';
 import { AmbientBackground } from '@components/layout/AmbientBackground';
 import { SmoothScrollProvider } from '@components/layout/SmoothScrollProvider';
 import { Footer } from '@components/layout/Footer';
+import { PremiumCursor } from '@components/layout/PremiumCursor';
 import { AboutSection } from '@sections/AboutSection';
 import { ContactSection } from '@sections/ContactSection';
 import { ExperienceSection } from '@sections/ExperienceSection';
@@ -69,6 +70,7 @@ const App = () => {
   return (
     <DialogStateProvider>
       <SmoothScrollProvider>
+        <PremiumCursor />
         <main
           className="relative min-h-screen bg-background text-foreground"
           style={{
@@ -106,6 +108,3 @@ const App = () => {
 };
 
 export default App;
-
-
-
